@@ -1,0 +1,15 @@
+{
+    "editor.formatOnSave": true,
+    "black-formatter.args": [
+        "--line-length",
+        "120"
+    ],
+    "[jinja-html]": {
+        "editor.defaultFormatter": "monosans.djlint"
+    },
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.exclude": [
+        ".venv"
+    ]
+}
