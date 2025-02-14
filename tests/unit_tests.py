@@ -1,5 +1,5 @@
 import unittest
-from renderer import NanoGalleryTemplateRenderer
+from src.renderer import NanoGalleryTemplateRenderer
 from ggallery.renderers.base_renderer import RendererParameters
 from ggallery.model import AlbumConfig, PhotoConfig
 

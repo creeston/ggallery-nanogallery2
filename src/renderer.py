@@ -1,4 +1,5 @@
-from jinja2 import Environment, PackageLoader, FileSystemLoader
+import os
+from jinja2 import Environment, FileSystemLoader
 from ggallery.renderers.base_renderer import BaseRenderer, RendererParameters
 
 
@@ -11,7 +12,8 @@ class NanoGalleryTemplateRenderer(BaseRenderer):
         self,
         parameters: RendererParameters,
     ) -> str:
-        env = Environment(loader=FileSystemLoader("templates"))
+        module_folder = os.path.dirname(__file__)
+        env = Environment(loader=FileSystemLoader(module_folder))
         template = env.get_template("nano-gallery.html.j2")
 
         items = []
