@@ -134,7 +134,7 @@
 
       {% if is_album_routing and not is_album_page %}
       fnThumbnailInit: function (e) {
-        $(e[0]).on('click', function (e) {
+        $(e[0]).on('click touchend', function (e) {
           e.preventDefault();
           let innerText = $(this).find('.nGY2GThumbnailLabel').text().trim();
           let album = Object.values(albums).find(album => album.title === innerText);
