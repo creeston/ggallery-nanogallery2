@@ -26,11 +26,13 @@
     <nav class="navbar">
       <div class="navbar-start">
         <div class="navbar-item">
+          
           <button id="previous-toggle" class="button is-dark hidden">
             <span class="icon">
               <i class="fa-solid fa-left-long"></i>
             </span>
           </button>
+          
         </div>
       </div>
       <div class="navbar-end">
@@ -70,57 +72,12 @@
         },
         
         { 
-          src: '4046386/pexels-photo-4046386.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-          srct: '4046386/pexels-photo-4046386.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-          
-          
-          albumID: '1000000',
-          title: 'Statue',
-        },
-        
-        { 
-          src: '208701/pexels-photo-208701.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2v',
-          srct: '208701/pexels-photo-208701.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2v',
-          
-          
-          albumID: '1000000',
-          title: 'Venice Canal',
-        },
-        
-        { 
-          src: '629142/pexels-photo-629142.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          srct: '629142/pexels-photo-629142.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          
-          
-          albumID: '1000000',
-          title: 'Pisa Tower',
-        },
-        
-        { 
           src: '590478/pexels-photo-590478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
           
           ID: '1000001',
           kind: 'album',
           
           title: 'Japan',
-        },
-        
-        { 
-          src: '402028/pexels-photo-402028.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          srct: '402028/pexels-photo-402028.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          
-          
-          albumID: '1000001',
-          
-        },
-        
-        { 
-          src: '590478/pexels-photo-590478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          srct: '590478/pexels-photo-590478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          
-          
-          albumID: '1000001',
-          title: 'Tokyo street',
         }
         
       ],
@@ -141,12 +98,15 @@
       thumbnailGutterHeight: 5,
       thumbnailL1GutterWidth: 15,
       thumbnailL1GutterHeight: 15,
+
+      
       thumbnailL1HoverEffect2: [
         { 'name': 'imageGrayOff' },
         { 'name': 'labelOpacity50', "duration": 1000 },
         { 'name': 'label_scale_1.0_0.8', "duration": 1000 },
         { 'name': 'imageScaleIn80', "duration": 1000 },
       ],
+      
       thumbnailHoverEffect2: 'labelAppear',
       touchAnimation: true,
       touchAutoOpenDelay: -1,
@@ -158,17 +118,41 @@
         thumbnail: { titleShadow: 'none', descriptionShadow: 'none', titleColor: '#fff', borderColor: '#fff', borderSize: 0, background: '#111' },
       },
 
-      fnGalleryRenderEnd: function(e) {
-        let title = e.title;
+      
+      fnThumbnailInit: function (e) {
+        $(e[0]).on('click', function (e) {
+          e.preventDefault();
+          let innerText = $(this).find('.nGY2GThumbnailLabel').text().trim();
+          let album = Object.values(albums).find(album => album.title === innerText);
+          if (album) {
+            if (window.location.pathname.endsWith('/index.html')) {
+              window.location = album.route + '/index.html';
+            } else {
+              window.location = album.route;
+            }
+          }
+        });
+      },
+      
 
-        if (e.albumID === '-1') {
-          title = "Test Gallery";
-          subtitle = "A collection of test images from Pexels";
-        } else {
-          let album = albums[e.GetID()];
-          subtitle = album.subtitle;
-          title = album.title;
-        }
+      fnGalleryRenderEnd: function(e) {
+        
+          let title = e.title;
+          let subtitle = "";
+          if (e.albumID === '-1') {
+            title = "Test Gallery";
+            subtitle = "A collection of test images from Pexels";
+          } else {
+            let album = albums[e.GetID()];
+            if (album) {
+            
+              title = "Test Gallery";
+              subtitle = "A collection of test images from Pexels";
+              navigateToAlbums();
+            
+            }
+          }
+        
 
         if (title) {
           $('.title').text(title);
@@ -182,11 +166,7 @@
           $('.subtitle').text('');
         }
 
-        if (e.albumID === '-1') {
-          $('#previous-toggle').addClass('hidden');
-        } else {
-          $('#previous-toggle').removeClass('hidden');
-        }
+        
       },
 
       locationHash: false
@@ -196,12 +176,14 @@
         
             '1000000': {
               subtitle: 'A collection of images from Italy',
+              route: 'italy',
               title: 'Italy',
             }
         ,
         
             '1000001': {
               
+              route: 'japan',
               title: 'Japan',
             }
         
@@ -216,7 +198,9 @@
     }
 
     $('#previous-toggle').on('click', function() {
-      navigateToAlbums();
+      
+        navigateToAlbums();
+      
     });
 
     $('#theme-toggle').on('click', function() {
@@ -224,10 +208,28 @@
       $('.fa-moon').toggleClass('hidden');
       $('.fa-sun').toggleClass('hidden');
       $('#theme-toggle').toggleClass('is-dark is-light');
+      $('#previous-toggle').toggleClass('is-dark is-light');
+
+      if ($('body').hasClass('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    $(document).ready(function() {
+      if (localStorage.getItem('theme') === 'light') {
+        $('body').removeClass('dark-mode');
+        $('.fa-moon').addClass('hidden');
+        $('.fa-sun').removeClass('hidden');
+        $('#theme-toggle').addClass('is-light');
+        $('#theme-toggle').removeClass('is-dark');
+        $('#previous-toggle').addClass('is-light');
+        $('#previous-toggle').removeClass('is-dark');
+      }
     });
   </script>
 </html>
-<script></script>
 <style>
   #nanogallery {
     padding-left: 12px;

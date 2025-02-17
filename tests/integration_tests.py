@@ -1,7 +1,8 @@
+import os
 import unittest
 from src.renderer import NanoGalleryTemplateRenderer
 from ggallery.renderers.base_renderer import RendererParameters
-from ggallery.model import AlbumConfig, PhotoConfig
+from ggallery.model import AlbumConfig, PhotoConfig, RenderedFile
 
 
 class TestNanoGalleryTemplateRenderer(unittest.TestCase):
@@ -54,10 +55,27 @@ class TestNanoGalleryTemplateRenderer(unittest.TestCase):
             thumbnail_height=800,
         )
 
-    def test_render(self):
+    def test_render_single_page(self):
         result = self.renderer.render(self.parameters)
-        with open("docs/index.html", "w") as f:
-            f.write(result)
+        self.__export_results("docs-spa", result)
+
+    def test_render_multiple_pages(self):
+        self.parameters.template_parameters = {"album_routing": True}
+        result = self.renderer.render(self.parameters)
+        self.__export_results("docs", result)
+
+    def __export_results(self, folder, result: RenderedFile | list[RenderedFile]):
+        if not isinstance(result, list):
+            result = [result]
+        for file in result:
+            path = f"{folder}/{file.name}"
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            if isinstance(file.content, bytes):
+                with open(path, "wb") as f:
+                    f.write(file.content)
+            elif isinstance(file.content, str):
+                with open(path, "w") as f:
+                    f.write(file.content)
 
 
 if __name__ == "__main__":

@@ -12,6 +12,8 @@ In your `ggallery` configuration file, specify the template URL:
 ```yaml
 template:
     url: https://github.com/creeston/ggallery-nanogallery2
+    parameters:
+        album_routing: true | false # If disabled, website will be rendered as Single Page Application, otherwise each album will have its own route
 ```
 
 

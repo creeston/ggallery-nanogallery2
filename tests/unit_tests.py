@@ -1,7 +1,8 @@
+from typing import cast
 import unittest
 from src.renderer import NanoGalleryTemplateRenderer
 from ggallery.renderers.base_renderer import RendererParameters
-from ggallery.model import AlbumConfig, PhotoConfig
+from ggallery.model import AlbumConfig, PhotoConfig, RenderedFile
 
 
 class TestNanoGalleryTemplateRenderer(unittest.TestCase):
@@ -34,12 +35,17 @@ class TestNanoGalleryTemplateRenderer(unittest.TestCase):
 
     def test_render(self):
         result = self.renderer.render(self.parameters)
-        self.assertIn("<title>Test Gallery</title>", result)
-        self.assertIn("src: 'cover2.jpg'", result)
-        self.assertIn("src: 'photo1.jpg'", result)
-        self.assertIn("srct: 'thumb1.jpg'", result)
-        self.assertIn("title: 'Album 1'", result)
-        self.assertIn("title: 'Photo 1'", result)
+        self.assertIsInstance(result, RenderedFile)
+        result = cast(RenderedFile, result)
+        content = result.content
+        self.assertIsInstance(content, str)
+        content = cast(str, result.content)
+        self.assertIn("<title>Test Gallery</title>", content)
+        self.assertIn("src: 'cover2.jpg'", content)
+        self.assertIn("src: 'photo1.jpg'", content)
+        self.assertIn("srct: 'thumb1.jpg'", content)
+        self.assertIn("title: 'Album 1'", content)
+        self.assertIn("title: 'Photo 1'", content)
 
 
 if __name__ == "__main__":
