@@ -118,23 +118,6 @@
         thumbnail: { titleShadow: 'none', descriptionShadow: 'none', titleColor: '#fff', borderColor: '#fff', borderSize: 0, background: '#111' },
       },
 
-      
-      fnThumbnailInit: function (e) {
-        $(e[0]).on('click', function (e) {
-          e.preventDefault();
-          let innerText = $(this).find('.nGY2GThumbnailLabel').text().trim();
-          let album = Object.values(albums).find(album => album.title === innerText);
-          if (album) {
-            if (window.location.pathname.endsWith('/index.html')) {
-              window.location = album.route + '/index.html';
-            } else {
-              window.location = album.route;
-            }
-          }
-        });
-      },
-      
-
       fnGalleryRenderEnd: function(e) {
         
           let title = e.title;
@@ -146,9 +129,7 @@
             let album = albums[e.GetID()];
             if (album) {
             
-              title = "Test Gallery";
-              subtitle = "A collection of test images from Pexels";
-              navigateToAlbums();
+              navigateToAlbum(album);
             
             }
           }
@@ -190,6 +171,14 @@
         
     };
 
+    function navigateToAlbum(album) {
+      if (window.location.pathname.endsWith('/index.html')) {
+        window.location = album.route + '/index.html';
+      } else {
+        window.location = album.route;
+      }
+    }
+
     function navigateToAlbums() {
       var instance = $('#nanogallery').nanogallery2('instance');
       instance.GOM.albumIdx = 0;
@@ -226,6 +215,18 @@
         $('#theme-toggle').removeClass('is-dark');
         $('#previous-toggle').addClass('is-light');
         $('#previous-toggle').removeClass('is-dark');
+      }
+    });
+
+    // Force page refresh on back/forward navigation
+    // Necessary for nanogallery state consistency
+    window.addEventListener("pageshow", function (event) {
+      var historyTraversal = event.persisted ||
+        (typeof window.performance != "undefined" &&
+          window.performance.navigation.type === 2);
+      if (historyTraversal) {
+        // Handle page restore.
+        window.location.reload();
       }
     });
   </script>

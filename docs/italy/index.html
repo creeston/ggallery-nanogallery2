@@ -120,8 +120,6 @@
         thumbnail: { titleShadow: 'none', descriptionShadow: 'none', titleColor: '#fff', borderColor: '#fff', borderSize: 0, background: '#111' },
       },
 
-      
-
       fnGalleryRenderEnd: function(e) {
         
           let title = "Italy";
@@ -150,6 +148,14 @@
     const albums =  {
         
     };
+
+    function navigateToAlbum(album) {
+      if (window.location.pathname.endsWith('/index.html')) {
+        window.location = album.route + '/index.html';
+      } else {
+        window.location = album.route;
+      }
+    }
 
     function navigateToAlbums() {
       var instance = $('#nanogallery').nanogallery2('instance');
@@ -191,6 +197,18 @@
         $('#theme-toggle').removeClass('is-dark');
         $('#previous-toggle').addClass('is-light');
         $('#previous-toggle').removeClass('is-dark');
+      }
+    });
+
+    // Force page refresh on back/forward navigation
+    // Necessary for nanogallery state consistency
+    window.addEventListener("pageshow", function (event) {
+      var historyTraversal = event.persisted ||
+        (typeof window.performance != "undefined" &&
+          window.performance.navigation.type === 2);
+      if (historyTraversal) {
+        // Handle page restore.
+        window.location.reload();
       }
     });
   </script>
