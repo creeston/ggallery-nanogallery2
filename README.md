@@ -14,7 +14,11 @@ template:
     url: https://github.com/creeston/ggallery-nanogallery2
     parameters:
         album_routing: true | false # If disabled, website will be rendered as Single Page Application, otherwise each album will have its own route
+        viewer_download_button: true | false # Adds a download button to the full-image viewer, to the left of the close button. Default: false
+        thumbnail_download_button: true | false # Adds a download button to every photo thumbnail (not album covers). Default: false
 ```
+
+Both download options use nanogallery2's own `downloadButton`/`DOWNLOAD` toolbar actions — no custom JS was added. Verified (via Playwright, against photos hosted on a different origin — Azure Blob Storage — than the gallery page itself) that this forces a real browser download rather than just opening the image in a new tab, so no CORS configuration or custom fetch-as-blob JS is needed on the storage side.
 
 
 ## References

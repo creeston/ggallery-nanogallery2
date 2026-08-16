@@ -47,6 +47,24 @@ class TestNanoGalleryTemplateRenderer(unittest.TestCase):
         self.assertIn("title: 'Album 1'", content)
         self.assertIn("title: 'Photo 1'", content)
 
+    def test_download_buttons_disabled_by_default(self):
+        result = cast(RenderedFile, self.renderer.render(self.parameters))
+        content = cast(str, result.content)
+        self.assertIn("topRight: 'closeButton'", content)
+        self.assertIn("thumbnailToolbarImage: { topLeft: '', bottomRight: '', topRight: '', bottomLeft: '' }", content)
+
+    def test_download_buttons_enabled_via_template_parameters(self):
+        self.parameters.template_parameters = {
+            "viewer_download_button": True,
+            "thumbnail_download_button": True,
+        }
+        result = cast(RenderedFile, self.renderer.render(self.parameters))
+        content = cast(str, result.content)
+        self.assertIn("topRight: 'downloadButton,closeButton'", content)
+        self.assertIn(
+            "thumbnailToolbarImage: { topLeft: '', bottomRight: '', topRight: 'DOWNLOAD', bottomLeft: '' }", content
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -101,7 +101,7 @@
       displayBreadcrumb: false,
       thumbnailL1Label: { display: true, valign: 'bottom', hideIcons: true, titleFontSize: '1.2em', align: 'left', titleMultiLine: true, displayDescription: false },
       thumbnailL1BuildInit2: 'title_font-weight_bold|label_left_5px',
-      thumbnailToolbarImage: { topLeft: '', bottomRight: '', topRight: '', bottomLeft: '' },
+      thumbnailToolbarImage: { topLeft: '', bottomRight: '', topRight: '{% if thumbnail_download_button %}DOWNLOAD{% endif %}', bottomLeft: '' },
       thumbnailToolbarAlbum: { topLeft: '', topRight: '', bottomLeft: '', bottomRight: '' },
       thumbnailDisplayTransitionDuration: 100,
       thumbnailDisplayInterval: 100,
@@ -125,7 +125,7 @@
       touchAnimation: true,
       touchAutoOpenDelay: -1,
       viewerToolbar: { standard: 'label', minimized: 'label', "display": true, },
-      viewerTools: { topLeft: '', topRight: 'closeButton', bottomLeft: '', bottomRight: '', },
+      viewerTools: { topLeft: '', topRight: '{% if viewer_download_button %}downloadButton,{% endif %}closeButton', bottomLeft: '', bottomRight: '', },
       viewerGallery: "none",
       imageTransition: 'slide',
       galleryTheme: {

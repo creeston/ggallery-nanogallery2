@@ -30,6 +30,10 @@ class NanoGalleryTemplateRenderer(BaseRenderer):
         env = Environment(loader=FileSystemLoader(module_folder))
         template = env.get_template("nano-gallery.html.j2")
 
+        template_parameters = parameters.template_parameters or {}
+        viewer_download_button = bool(template_parameters.get("viewer_download_button", False))
+        thumbnail_download_button = bool(template_parameters.get("thumbnail_download_button", False))
+
         items = []
         album_id = self.GALLERY_START_ID
         for album in parameters.albums:
@@ -73,6 +77,8 @@ class NanoGalleryTemplateRenderer(BaseRenderer):
             thumbnail_height=parameters.thumbnail_height,
             is_album_page=False,
             is_album_routing=False,
+            viewer_download_button=viewer_download_button,
+            thumbnail_download_button=thumbnail_download_button,
         )
 
         return RenderedFile(name="index.html", content=html_index_content)
@@ -84,6 +90,10 @@ class NanoGalleryTemplateRenderer(BaseRenderer):
         module_folder = os.path.dirname(__file__)
         env = Environment(loader=FileSystemLoader(module_folder))
         template = env.get_template("nano-gallery.html.j2")
+
+        template_parameters = parameters.template_parameters or {}
+        viewer_download_button = bool(template_parameters.get("viewer_download_button", False))
+        thumbnail_download_button = bool(template_parameters.get("thumbnail_download_button", False))
 
         rendered_files = []
         items = []
@@ -120,6 +130,8 @@ class NanoGalleryTemplateRenderer(BaseRenderer):
             thumbnail_height=parameters.thumbnail_height,
             is_album_page=False,
             is_album_routing=True,
+            viewer_download_button=viewer_download_button,
+            thumbnail_download_button=thumbnail_download_button,
         )
 
         rendered_files.append(RenderedFile(name="index.html", content=html_index_content))
@@ -153,6 +165,8 @@ class NanoGalleryTemplateRenderer(BaseRenderer):
                 thumbnail_height=parameters.thumbnail_height,
                 is_album_page=True,
                 is_album_routing=True,
+                viewer_download_button=viewer_download_button,
+                thumbnail_download_button=thumbnail_download_button,
             )
 
             rendered_files.append(RenderedFile(name=f"{album.route}/index.html", content=html_album_content))
